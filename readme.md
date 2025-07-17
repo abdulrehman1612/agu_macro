@@ -2,19 +2,10 @@
 
 ![agu_macro](imgur.com image replace me!)
 
-*A short description of the keyboard/project*
+* Keyboard Maintainer: [agu](https://github.com/abdulrehman1612)
+* Hardware Supported: raspberry pi rp2040
 
-* Keyboard Maintainer: [agu](https://github.com/agu)
-* Hardware Supported: *The PCBs, controllers supported*
-* Hardware Availability: *Links to where you can find this hardware*
 
-Make example for this keyboard (after setting up your build environment):
-
-    make agu_macro:default
-
-Flashing example for this keyboard:
-
-    make agu_macro:default:flash
 
 See the [build environment setup](https://docs.qmk.fm/#/getting_started_build_tools) and the [make instructions](https://docs.qmk.fm/#/getting_started_make_guide) for more information. Brand new to QMK? Start with our [Complete Newbs Guide](https://docs.qmk.fm/#/newbs).
 
