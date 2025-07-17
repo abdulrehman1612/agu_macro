@@ -7,26 +7,22 @@
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     
-    [0] = LAYOUT_ortho_3x8(
-  KC_A, KC_B, KC_C, KC_D, KC_N, KC_M, KC_A, KC_B, 
-  KC_E, KC_F, KC_G, KC_H, _______, _______, KC_C, KC_D,
-  KC_I, KC_J, KC_K, KC_L, _______, _______, _______, _______
+    [0] = LAYOUT(
+  KC_A, KC_B, KC_C, KC_D, KC_A, KC_B,
+  KC_E, KC_F, KC_G, KC_H, _______, _______,
+  KC_I, KC_J, KC_K, KC_L, _______, _______
 )
 
 };
 
 
 
-bool encoder_update_user(uint8_t index, bool clockwise) {
-    if (index == 0) {
-        uint16_t kc = dynamic_keymap_get_keycode(0,0, clockwise ? 6 : 7);
-        tap_code16(kc);
-    } else if (index == 1) {
-        uint16_t kc = dynamic_keymap_get_keycode(0,1, clockwise ? 6 : 7);
-        tap_code16(kc);
-    }
-    return false;
-}
+#if defined(ENCODER_MAP_ENABLE)
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
+    [0] =   { ENCODER_CCW_CW(KC_NO, KC_NO), ENCODER_CCW_CW(KC_VOLD, KC_VOLU)  }
+    //                  Encoder 1                                     Encoder 2
+};
+#endif
 
 
 led_config_t g_led_config = {
@@ -56,64 +52,4 @@ led_config_t g_led_config = {
     4,4,4,4,4,4,4,4,4,4,4,4
   }
 };
-
-
-uint8_t current_theme = 0;
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case RGB_MOD:
-            if (record->event.pressed) {
-                current_theme++;
-                if (current_theme > 9) {  // number of themes minus one
-                    current_theme = 0;
-                }
-                eeconfig_update_user(current_theme);  // save to EEPROM
-            }
-            return false; // prevent further processing
-    }
-    return true;
-}
-
-
-
-bool rgb_matrix_indicators_kb(void) {
-    switch (current_theme) {
-        case 0: // Red
-            for (int i = 0; i < 12; i++) rgb_matrix_set_color(i, 255, 0, 0);
-            break;
-        case 1: // Green
-            for (int i = 0; i < 12; i++) rgb_matrix_set_color(i, 0, 255, 0);
-            break;
-        case 2: // Blue
-            for (int i = 0; i < 12; i++) rgb_matrix_set_color(i, 0, 0, 255);
-            break;
-        case 3: // Yellow
-            for (int i = 0; i < 12; i++) rgb_matrix_set_color(i, 255, 255, 0);
-            break;
-        case 4: // Cyan
-            for (int i = 0; i < 12; i++) rgb_matrix_set_color(i, 0, 255, 255);
-            break;
-        case 5: // Magenta
-            for (int i = 0; i < 12; i++) rgb_matrix_set_color(i, 255, 0, 255);
-            break;
-        case 6: // White
-            for (int i = 0; i < 12; i++) rgb_matrix_set_color(i, 255, 255, 255);
-            break;
-        case 7: // Orange
-            for (int i = 0; i < 12; i++) rgb_matrix_set_color(i, 255, 128, 0);
-            break;
-        case 8: // Purple
-            for (int i = 0; i < 12; i++) rgb_matrix_set_color(i, 128, 0, 128);
-            break;
-        case 9: // Pink
-            for (int i = 0; i < 12; i++) rgb_matrix_set_color(i, 255, 105, 180);
-            break;
-    }
-    return rgb_matrix_indicators_user();
-}
-
-void keyboard_post_init_user(void) {
-    current_theme = eeconfig_read_user();  // load saved theme
-    if (current_theme > 9) current_theme = 0; // safety: if EEPROM has garbage
-}
 
